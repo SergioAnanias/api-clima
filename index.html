@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación del tiempo</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/secrets.js"></script>
+    <script>
+        $('document').ready(function () {
+            $('form').submit(function (e) {
+                e.preventDefault();
+                let cityname = $('#Busqueda').val();
+                console.log(cityname);
+                if(cityname == ""){
+                    alert("Ingresa una ciudad")
+                    return false
+                }
+                $.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`).fail(function() {
+                        alert("Ingrese una ciudad valida")
+                        return false
+                    });
+
+                $.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`, function (data) {
+                    console.log(data)
+
+                    $('#dataweather').html(`<div><h1>La temperatura actual en ${data.name}, ${data.sys.country} es ${data.main.temp}°</h1></div>`)
+
+                }, "json");
+
+            });
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <form>
+        <div class="container">
+            <div class="row">
+                <div class="mb-3 col-3">
+                    <label for="Busqueda" class="form-label">Busqueda</label>
+                    <input type="text" class="form-control" id="Busqueda">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </div>
+                <div class="col-9" id="dataweather">
+
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>
