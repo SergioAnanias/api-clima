@@ -2,58 +2,89 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplicación del tiempo</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/jquery-3.6.0.min.js"></script>
-    <script src="js/secrets.js"></script>
-    <script>
-        $('document').ready(function () {
-            $('form').submit(function (e) {
-                e.preventDefault();
-                let cityname = $('#Busqueda').val();
-                console.log(cityname);
-                if(cityname == ""){
-                    alert("Ingresa una ciudad")
-                    return false
-                }
-                $.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`).fail(function() {
-                        alert("Ingrese una ciudad valida")
-                        return false
-                    });
-
-                $.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`, function (data) {
-                    console.log(data)
-
-                    $('#dataweather').html(`<div><h1>La temperatura actual en ${data.name}, ${data.sys.country} es ${data.main.temp}°</h1></div>`)
-
-                }, "json");
-
-            });
-
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aplicación del tiempo</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/secrets.js"></script>
+  <script>
+    $("document").ready(function () {
+      $("form").submit(function (e) {
+        e.preventDefault();
+        let cityname = $("#Busqueda").val();
+        if (cityname == "") {
+          alert("Ingresa una ciudad");
+          return false;
+        }
+        $.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`
+        ).fail(function () {
+          alert("Ingrese una ciudad valida");
+          return false;
         });
 
-    </script>
+        $.get(
+          `https://api.openweathermap.org/data/2.5/weather?q=${cityname}&units=metric&appid=${apikey}`,
+          function (data) {
+            let icono = data.weather[0].icon
+            // Icono
+            $('#img').html(`<img src="http://openweathermap.org/img/wn/${icono}@4x.png">`)
+            // Ciudad
+            $('div #name h5').html(
+              `<h5>Ciudad: ${data.name}, ${data.sys.country}</h5>`
+            );
+            // Temperatura
+            $('div #Temperatura').html(`<h5>Grados: ${data.main.temp} °C</h5>`);
+            // Coordenadas
+            $('#coord').html(`<h5>Coordenadas</h5>
+                <li>Latitud: ${data.coord.lat}</li>
+                <li>Longitud: ${data.coord.lon}</li>`)
+
+                console.log(data)
+
+          },
+          "json"
+        );
+      });
+    });
+  </script>
 </head>
 
 <body>
-    <form>
-        <div class="container">
-            <div class="row">
-                <div class="mb-3 col-3">
-                    <label for="Busqueda" class="form-label">Busqueda</label>
-                    <input type="text" class="form-control" id="Busqueda">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </div>
-                <div class="col-9" id="dataweather">
-
-                </div>
+  <form>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="mb-3 p-3 col-8 offset-2 bg-info rounded">
+          <label for="Busqueda" class="form-label">Ingresa tu ciudad acá:</label>
+          <input type="text" class="form-control" id="Busqueda" />
+          <div class="row">
+            <div class="col-3" id="img">
             </div>
+            <div id="info" class="col-8 offset-1 mt-5">
+              <div id="name">
+                <h5>Ciudad:</h5>
+              </div>
+              <div id="Temperatura">
+                <h5>Grados:</h5>
+              </div>
+              <div id="coord">
+                <h5>Coordenadas</h5>
+                <li>Latitud:</li>
+                <li>Longitud:</li>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn mt-5 btn-success">
+            Buscar
+          </button>
         </div>
-    </form>
+      </div>
+    </div>
+  </form>
 </body>
 
 </html>
